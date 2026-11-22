@@ -1,0 +1,38 @@
+cmake_minimum_required(VERSION 4.0)
+
+project(havSF2 VERSION 0.1.0 LANGUAGES CXX)
+
+# The library is the one header: an interface target that only adds its folder to the include path
+add_library(havSF2 INTERFACE)
+add_library(havSF2::havSF2 ALIAS havSF2)
+target_include_directories(havSF2 INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/havSF2)
+target_compile_features(havSF2 INTERFACE cxx_std_23)
+
+# The tests build when havSF2 is the top-level project (not when another project adds it)
+option(HAVSF2_BUILD_TESTS "Build the havSF2 tests" ${PROJECT_IS_TOP_LEVEL})
+if(HAVSF2_BUILD_TESTS)
+  enable_testing()
+  add_executable(havSF2Tests tests/havSF2Tests.cpp tests/TestMain.cpp)
+  target_include_directories(havSF2Tests PRIVATE tests)
+  target_link_libraries(havSF2Tests PRIVATE havSF2::havSF2)
+  set_target_properties(havSF2Tests PROPERTIES CXX_EXTENSIONS OFF)
+  if(MSVC)
+    target_compile_options(havSF2Tests PRIVATE /W4 /WX /permissive- /utf-8)
+  else()
+    target_compile_options(havSF2Tests PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Werror)
+  endif()
+  add_test(NAME havSF2Tests COMMAND havSF2Tests)
+endif()
+
+# The example renders one note of a SoundFont into a WAV file. It builds like the tests.
+option(HAVSF2_BUILD_EXAMPLES "Build the havSF2 example" ${PROJECT_IS_TOP_LEVEL})
+if(HAVSF2_BUILD_EXAMPLES)
+  add_executable(RenderNote examples/RenderNote.cpp)
+  target_link_libraries(RenderNote PRIVATE havSF2::havSF2)
+  set_target_properties(RenderNote PROPERTIES CXX_EXTENSIONS OFF)
+  if(MSVC)
+    target_compile_options(RenderNote PRIVATE /W4 /WX /permissive- /utf-8)
+  else()
+    target_compile_options(RenderNote PRIVATE -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Werror)
+  endif()
+endif()

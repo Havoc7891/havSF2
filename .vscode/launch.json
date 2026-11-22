@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "havSF2 tests (MSVC Debug)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/build/msvc/Debug/havSF2Tests.exe",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "CMake: build MSVC Debug"
+    },
+    {
+      "name": "havSF2 tests (MinGW Debug)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/out/build/mingw-debug/havSF2Tests.exe",
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb.exe",
+      "preLaunchTask": "CMake: build MinGW Debug"
+    }
+  ]
+}
